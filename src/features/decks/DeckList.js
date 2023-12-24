@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { listDecks } from "../../utils/api/index";
+import { listDecks } from "../../utils/api";
 import { useHistory } from "react-router-dom";
+import { Switch } from "react-router-dom/cjs/react-router-dom";
+import { Route } from "react-router-dom/cjs/react-router-dom.min";
+import CreateDeck from "./CreateDeck";
+import StudyCard from "../StudyCard/StudyCard";
 // import { BrowserRouter as Router } from "react-router-dom";
 
 const DeckList = () => {
-  
   const [decks, setDecks] = useState([]);
-  const history = useHistory()
+  const [selectedDeckId, setSelectedDeckId] = useState(0)
+  const history = useHistory();
 
   // console.log(decks);
 
@@ -19,10 +23,15 @@ const DeckList = () => {
     loadDecks();
   }, []);
 
+  const openStudyCard = (deck) => {
+    setSelectedDeckId(deck.id)
+    history.push(`/decks/${deck.id}/study`);
+  };
+
   const RenderCard = ({ deck }) => {
     // console.log("deck", deck);
     return (
-      <div className="card mb-3">
+      <div id="{deck.id}" className="card mb-3">
         <div className="card-body">
           <div className="row">
             <div className="col">
@@ -43,15 +52,15 @@ const DeckList = () => {
         <div className="card-footer">
           <div className="row">
             <div className="col">
-              <button type="button" class="btn btn-secondary mr-2">
+              <button type="button" className="btn btn-secondary mr-2">
                 View
               </button>
-              <button type="button" class="btn btn-primary">
+              <button type="button" onClick={() => openStudyCard(deck)} className="btn btn-primary">
                 Study
               </button>
             </div>
             <div className="col text-right">
-              <button type="button" class="btn btn-danger">
+              <button type="button" className="btn btn-danger">
                 Delete
               </button>
             </div>
@@ -62,21 +71,41 @@ const DeckList = () => {
   };
 
   const handleCreateDeck = () => {
-    history.push('/deck/new')
-  }
+    history.push("/deck/new");
+  };
+
+  const RenderDeckList = () => {
+    return (
+      <div className="container mb-2">
+        <div>
+          <button
+            type="button"
+            onClick={handleCreateDeck}
+            className="btn btn-secondary mb-2"
+          >
+            Create Deck
+          </button>
+        </div>
+        {decks &&
+          decks.length > 0 &&
+          decks.map((deck, index) => <RenderCard key={index} deck={deck} />)}
+      </div>
+    );
+  };
 
   return (
     <div className="container-sm">
-      <div className="container mb-2">
-      <div>
-        <button type="button" onClick={handleCreateDeck} class="btn btn-secondary mb-2">
-          Create Deck
-        </button>
-      </div>
-        { decks && decks.length > 0 &&
-          decks.map((deck) => (<RenderCard deck={deck} />))
-        }
-      </div>
+      <Switch>
+        <Route exact={true} path="/">
+          <RenderDeckList />
+        </Route>
+        <Route exact={true} path={"/deck/new"}>
+          <CreateDeck />
+        </Route>
+        <Route path={"/decks/:deckId/study"}>
+          <StudyCard />
+        </Route>
+      </Switch>
     </div>
   );
 };
