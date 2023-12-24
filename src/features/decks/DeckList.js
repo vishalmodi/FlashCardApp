@@ -99,7 +99,7 @@ const DeckList = () => {
         <Route exact={true} path="/">
           <RenderDeckList />
         </Route>
-        <Route exact={true} path={"/deck/new"}>
+        <Route exact={true} path={"/decks/new"}>
           <CreateDeck />
         </Route>
         <Route path={"/decks/:deckId/study"}>

@@ -20,9 +20,9 @@ function App() {
           <Route exact={true} path="/">
             <DeckList />
           </Route>
-          <Route path="/deck">
+          {/* <Route path="/deck">
             <DeckList />
-          </Route>
+          </Route> */}
           <Route path="/decks">
             <DeckList />
           </Route>
