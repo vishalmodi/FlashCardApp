@@ -5,11 +5,12 @@ import { Switch } from "react-router-dom/cjs/react-router-dom";
 import { Route } from "react-router-dom/cjs/react-router-dom.min";
 import CreateDeck from "./CreateDeck";
 import StudyCard from "../StudyCard/StudyCard";
+import DeckView from "./DeckView";
 // import { BrowserRouter as Router } from "react-router-dom";
 
 const DeckList = () => {
   const [decks, setDecks] = useState([]);
-  const [selectedDeckId, setSelectedDeckId] = useState(0)
+  // const [selectedDeckId, setSelectedDeckId] = useState(0);
   const history = useHistory();
 
   // console.log(decks);
@@ -24,8 +25,12 @@ const DeckList = () => {
   }, []);
 
   const openStudyCard = (deck) => {
-    setSelectedDeckId(deck.id)
+    // setSelectedDeckId(deck.id);
     history.push(`/decks/${deck.id}/study`);
+  };
+
+  const openDeckView = (deck) => {
+    history.push(`/decks/${deck.id}`);
   };
 
   const RenderCard = ({ deck }) => {
@@ -52,10 +57,18 @@ const DeckList = () => {
         <div className="card-footer">
           <div className="row">
             <div className="col">
-              <button type="button" className="btn btn-secondary mr-2">
+              <button
+                type="button"
+                onClick={() => openDeckView(deck)}
+                className="btn btn-secondary mr-2"
+              >
                 View
               </button>
-              <button type="button" onClick={() => openStudyCard(deck)} className="btn btn-primary">
+              <button
+                type="button"
+                onClick={() => openStudyCard(deck)}
+                className="btn btn-primary"
+              >
                 Study
               </button>
             </div>
@@ -71,7 +84,7 @@ const DeckList = () => {
   };
 
   const handleCreateDeck = () => {
-    history.push("/deck/new");
+    history.push("/decks/new");
   };
 
   const RenderDeckList = () => {
@@ -104,6 +117,9 @@ const DeckList = () => {
         </Route>
         <Route path={"/decks/:deckId/study"}>
           <StudyCard />
+        </Route>
+        <Route path={"/decks/:deckId"}>
+          <DeckView />
         </Route>
       </Switch>
     </div>

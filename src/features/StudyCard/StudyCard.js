@@ -4,7 +4,7 @@ import { readDeck } from "../../utils/api";
 import {
   useHistory,
   useParams,
-} from "react-router-dom/cjs/react-router-dom.min";
+} from "react-router-dom";
 
 const StudyCard = () => {
   const { deckId } = useParams();
@@ -45,7 +45,7 @@ const StudyCard = () => {
   const breadcrumbItems = [
     {
       name: `${deck.name}`,
-      href: "#",
+      href: `/decks/${deckId}`,
     },
     {
       name: "Study",
