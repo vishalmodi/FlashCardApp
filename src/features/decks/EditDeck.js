@@ -1,15 +1,37 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
-import { createDeck } from "../../utils/api/index";
+import { useHistory, useParams } from "react-router-dom";
 import Navigation from "../../Layout/Navigation";
+import { useReadDeckEffect } from "../../utils/effects";
+import { updateDeck } from "../../utils/api";
 
-const CreateDeck = (decks) => {
+const EditDeck = () => {
   const initialState = {
+    id: "",
     name: "",
     description: "",
   };
-  const [formData, setFormData] = useState({ ...initialState });
   const history = useHistory();
+  const { deckId } = useParams();
+  const deckViewPath = `/decks/${deckId}`
+  const [deck, setDeck] = useState({});
+  const [formData, setFormData] = useState({ ...initialState });
+
+  useReadDeckEffect(
+    deckId,
+    (data) => {
+      setDeck(data);
+      setFormData(data);
+    },
+    [deckId]
+  );
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    updateDeck(formData);
+
+    history.push(deckViewPath);
+  };
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -18,23 +40,17 @@ const CreateDeck = (decks) => {
     });
   };
 
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-
-    const deck = {
-      ...formData,
-      id: decks.length + 1,
-    };
-
-    createDeck(deck);
-
-    // TODO got to deck view
-    history.push("/");
-  };
-
+  const handleCancel = () => {
+    history.push(deckViewPath)
+  }
+  
   const breadcrumbItems = [
     {
-      name: "Create Deck",
+      name: `${deck.name}`,
+      href: deckViewPath,
+    },
+    {
+      name: "Edit Deck",
       href: "#",
     },
   ];
@@ -43,7 +59,7 @@ const CreateDeck = (decks) => {
     <div className="container-sm">
       <form onSubmit={handleFormSubmit}>
         <Navigation items={breadcrumbItems} />
-        <h2>Create Deck</h2>
+        <h2>Edit Deck</h2>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name
@@ -77,7 +93,7 @@ const CreateDeck = (decks) => {
         <div className="mb-3">
           <button
             type="button"
-            onClick={() => history.goBack()}
+            onClick={handleCancel}
             className="btn btn-secondary mr-2"
           >
             Cancle
@@ -87,8 +103,8 @@ const CreateDeck = (decks) => {
           </button>
         </div>
       </form>
-      </div>
+    </div>
   );
 };
 
-export default CreateDeck;
+export default EditDeck;
