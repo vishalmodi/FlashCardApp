@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navigation from "../../Layout/Navigation";
-import { readDeck } from "../../utils/api";
+// import { readDeck } from "../../utils/api";
 import {
   useHistory,
   useParams,
 } from "react-router-dom";
+import { useReadDeckEffect } from "../../utils/effects"
 
 const StudyCard = () => {
   const { deckId } = useParams();
@@ -16,31 +17,38 @@ const StudyCard = () => {
   const [totalCard, setTotalCard] = useState(0);
   const [isCardFlip, setIsCardFlip] = useState(false);
 
-  useEffect(() => {
-    const abortController = new AbortController();
+  // useEffect(() => {
+  //   const abortController = new AbortController();
 
-    async function loadDeck() {
-      try {
-        const data = await readDeck(deckId, abortController.signal);
-        setDeck(data);
-        setActiveCard(data.cards[0]);
-        setCardNo(0);
-        setTotalCard(data.cards.length);
-      } catch (error) {
-        if (error.name === "AbortError") {
-          console.log("readDeck error for :", deckId);
-        } else {
-          throw error;
-        }
-      }
-    }
+  //   async function loadDeck() {
+  //     try {
+  //       const data = await readDeck(deckId, abortController.signal);
+  //       setDeck(data);
+  //       setActiveCard(data.cards[0]);
+  //       setCardNo(0);
+  //       setTotalCard(data.cards.length);
+  //     } catch (error) {
+  //       if (error.name === "AbortError") {
+  //         console.log("readDeck error for :", deckId);
+  //       } else {
+  //         throw error;
+  //       }
+  //     }
+  //   }
 
-    loadDeck();
+  //   loadDeck();
 
-    return () => {
-      abortController.abort();
-    };
-  }, [deckId]);
+  //   return () => {
+  //     abortController.abort();
+  //   };
+  // }, [deckId]);
+
+  useReadDeckEffect(deckId, (data) => {
+    setDeck(data);
+    setActiveCard(data.cards[0]);
+    setCardNo(0);
+    setTotalCard(data.cards.length);
+  }, [deckId])
 
   const breadcrumbItems = [
     {

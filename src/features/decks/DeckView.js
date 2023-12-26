@@ -43,7 +43,7 @@ const DeckView = () => {
   };
 
   const openEditDeck = (deck) => {
-    history.push(`/decks/${deck.id}`);
+    history.push(`/decks/${deck.id}/edit`);
   };
 
   const deleteCard = (cardId) => {
