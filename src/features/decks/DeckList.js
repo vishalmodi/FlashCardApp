@@ -24,14 +24,21 @@ const DeckList = () => {
     loadDecks();
   }, []);
 
-  const openStudyCard = (deck) => {
-    // setSelectedDeckId(deck.id);
-    history.push(`/decks/${deck.id}/study`);
+  const openStudyCard = (deckId) => {
+    history.push(`/decks/${deckId}/study`);
   };
 
-  const openDeckView = (deck) => {
-    history.push(`/decks/${deck.id}`);
+  const openDeckView = (deckId) => {
+    history.push(`/decks/${deckId}`);
   };
+
+  const deleteDeck = (deckId) => {
+    let canDelete = window.confirm("Delete this deck? \n\nYou will not be able to recover it.");
+  
+    if (canDelete) {
+
+    }
+  }
 
   const RenderCard = ({ deck }) => {
     // console.log("deck", deck);
@@ -59,21 +66,25 @@ const DeckList = () => {
             <div className="col">
               <button
                 type="button"
-                onClick={() => openDeckView(deck)}
+                onClick={() => openDeckView(deck.id)}
                 className="btn btn-secondary mr-2"
               >
                 View
               </button>
               <button
                 type="button"
-                onClick={() => openStudyCard(deck)}
+                onClick={() => openStudyCard(deck.id)}
                 className="btn btn-primary"
               >
                 Study
               </button>
             </div>
             <div className="col text-right">
-              <button type="button" className="btn btn-danger">
+              <button
+                type="button"
+                onClick={() => deleteDeck(deck.id)}
+                className="btn btn-danger"
+              >
                 Delete
               </button>
             </div>
