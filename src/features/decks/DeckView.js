@@ -15,9 +15,6 @@ const DeckView = () => {
       try {
         const data = await readDeck(deckId, abortController.signal);
         setDeck(data);
-        // setActiveCard(data.cards[0]);
-        // setCardNo(0);
-        // setTotalCard(data.cards.length);
       } catch (error) {
         if (error.name === "AbortError") {
           console.log("readDeck error for :", deckId);
@@ -49,6 +46,15 @@ const DeckView = () => {
     history.push(`/decks/${deck.id}`);
   };
 
+  const deleteCard = (cardId) => {
+    let canDelete = window.confirm(
+      "Delete this card? \n\nYou will not be able to recover it."
+    );
+
+    if (canDelete) {
+    }
+  };
+
   const RenderDeckCard = () => {
     return (
       <div id="{deck.id}" className="card mb-3">
@@ -75,9 +81,16 @@ const DeckView = () => {
               <button
                 type="button"
                 onClick={() => openStudyCard(deck)}
-                className="btn btn-primary"
+                className="btn btn-primary  mr-2"
               >
                 Study
+              </button>
+              <button
+                type="button"
+                // onClick={handleCreateDeck}
+                className="btn btn-primary"
+              >
+                Add Cards
               </button>
             </div>
             <div className="col text-right">
@@ -111,12 +124,16 @@ const DeckView = () => {
             <div className="col text-right">
               <button
                 type="button"
-                onClick={() => openEditDeck(deck)}
+                onClick={() => openEditDeck(card.id)}
                 className="btn btn-secondary mr-2"
               >
                 Edit
               </button>
-              <button type="button" className="btn btn-danger">
+              <button
+                type="button"
+                onClick={() => deleteCard(card.id)}
+                className="btn btn-danger"
+              >
                 Delete
               </button>
             </div>

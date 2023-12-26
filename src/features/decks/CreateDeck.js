@@ -46,16 +46,6 @@ const CreateDeck = (decks) => {
     <div className="container-sm">
       <form onSubmit={handleFormSubmit}>
         <Navigation items={breadcrumbItems} />
-        {/* <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a href="/">Home</a>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              Create Deck
-            </li>
-          </ol>
-        </nav> */}
         <h2>Create Deck</h2>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
