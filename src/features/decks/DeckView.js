@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Navigation from "../../Layout/Navigation";
 import { readDeck } from "../../utils/api";
-import { useHistory, useParams } from "react-router-dom";
+import { Route, Switch, useHistory, useParams } from "react-router-dom";
+// import { Route, Switch,useRouteMatch } from "react-router-dom";
+import CardRoutes from "./../StudyCard/CardRoutes";
 
 const DeckView = () => {
   const history = useHistory();
@@ -46,6 +48,10 @@ const DeckView = () => {
     history.push(`/decks/${deck.id}/edit`);
   };
 
+  const openAddCard = () => {
+    history.push(`/decks/${deck.id}/cards/new`);
+  };
+
   const deleteCard = (cardId) => {
     let canDelete = window.confirm(
       "Delete this card? \n\nYou will not be able to recover it."
@@ -87,7 +93,7 @@ const DeckView = () => {
               </button>
               <button
                 type="button"
-                // onClick={handleCreateDeck}
+                onClick={openAddCard}
                 className="btn btn-primary"
               >
                 Add Cards
@@ -157,11 +163,26 @@ const DeckView = () => {
     );
   };
 
+  const RenderDeckView = () => {
+    return (
+      <>
+        <Navigation items={breadcrumbItems} />
+        <RenderDeckCard />
+        <RenderCardList />
+      </>
+    );
+  };
+
   return (
     <div className="container-sm">
-      <Navigation items={breadcrumbItems} />
-      <RenderDeckCard />
-      <RenderCardList />
+      <Switch>
+        <Route exact={true} path={`/decks/:deckId`}>
+          <RenderDeckView />
+        </Route>
+        <Route path={`/decks/:deckId/cards`}>
+          <CardRoutes />
+        </Route>
+      </Switch>
     </div>
   );
 };

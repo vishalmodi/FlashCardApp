@@ -7,6 +7,7 @@ import CreateDeck from "./CreateDeck";
 import StudyCard from "../StudyCard/StudyCard";
 import DeckView from "./DeckView";
 import EditDeck from "./EditDeck";
+import CardRoutes from "./../StudyCard/CardRoutes"
 // import { BrowserRouter as Router } from "react-router-dom";
 
 const DeckList = () => {
@@ -135,6 +136,9 @@ const DeckList = () => {
         </Route>
         <Route path={"/decks/:deckId"}>
           <DeckView />
+        </Route>
+        <Route path={`/decks/:deckId/cards`}>
+          <CardRoutes />
         </Route>
       </Switch>
     </div>
