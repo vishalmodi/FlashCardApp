@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import AddCard from "./AddCard";
-import EditCard from "./EditCard";
+import AddEditStudyCard from "./AddEditStudyCard";
 
 const CardRoutes = () => {
   const { path } = useRouteMatch();
@@ -9,10 +8,10 @@ const CardRoutes = () => {
     <div className="container-sm">
       <Switch>
         <Route exact={true} path={`${path}/new`}>
-          <AddCard />
+          <AddEditStudyCard />
         </Route>
         <Route path={`${path}/:cardId/edit`}>
-          <EditCard />
+          <AddEditStudyCard />
           </Route>
       </Switch>
     </div>
