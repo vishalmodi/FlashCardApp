@@ -52,6 +52,10 @@ const DeckView = () => {
     history.push(`/decks/${deck.id}/cards/new`);
   };
 
+  const openEditCard = (cardId) => {
+    history.push(`/decks/${deck.id}/cards/${cardId}/edit`);
+  }
+
   const deleteCard = (cardId) => {
     let canDelete = window.confirm(
       "Delete this card? \n\nYou will not be able to recover it."
@@ -111,6 +115,7 @@ const DeckView = () => {
   };
 
   const RenderCard = ({ card }) => {
+    console.log('RenderCard', card.id)
     return (
       <div id="{deck.id}" className="card mb-1">
         <div className="card-body">
@@ -130,7 +135,7 @@ const DeckView = () => {
             <div className="col text-right">
               <button
                 type="button"
-                onClick={() => openEditDeck(card.id)}
+                onClick={() => openEditCard(card.id)}
                 className="btn btn-secondary mr-2"
               >
                 Edit
