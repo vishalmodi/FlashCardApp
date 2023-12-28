@@ -3,19 +3,15 @@ import { listDecks } from "../../utils/api";
 import { useHistory } from "react-router-dom";
 import { Switch } from "react-router-dom/cjs/react-router-dom";
 import { Route } from "react-router-dom/cjs/react-router-dom.min";
-import CreateDeck from "./CreateDeck";
+import AddEditDeck from "./AddEditDeck";
 import StudyCard from "../StudyCard/StudyCard";
 import DeckView from "./DeckView";
-import EditDeck from "./EditDeck";
 import CardRoutes from "./../StudyCard/CardRoutes"
-// import { BrowserRouter as Router } from "react-router-dom";
 
 const DeckList = () => {
   const [decks, setDecks] = useState([]);
-  // const [selectedDeckId, setSelectedDeckId] = useState(0);
   const history = useHistory();
 
-  // console.log(decks);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -126,13 +122,13 @@ const DeckList = () => {
           <RenderDeckList />
         </Route>
         <Route exact={true} path={"/decks/new"}>
-          <CreateDeck />
+          <AddEditDeck decks={decks}/>
         </Route>
         <Route path={"/decks/:deckId/study"}>
           <StudyCard />
         </Route>
         <Route path={"/decks/:deckId/edit"} >
-          <EditDeck />
+          <AddEditDeck />
         </Route>
         <Route path={"/decks/:deckId"}>
           <DeckView />
