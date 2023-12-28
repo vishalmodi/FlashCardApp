@@ -1,25 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { updateCard, readCard } from "../../utils/api/index";
+import { createCard, readCard, updateCard } from "../../utils/api/index";
 import Navigation from "../../Layout/Navigation";
 import { useReadDeckEffect } from "../../utils/effects";
 
-const EditCard = () => {
-  const history = useHistory();
-  const {
-    params: { deckId, cardId },
-  } = useRouteMatch();
-
+const AddEditStudyCard = () => {
+  const ADD_CARD = "Add Card";
+  const EDIT_CARD = "Edit Card";
   const initialState = {
     id: 0,
     front: "",
     back: "",
     deckId: "",
   };
+  const history = useHistory();
+  const {
+    path,
+    params: { deckId, cardId },
+  } = useRouteMatch();
 
   const [formData, setFormData] = useState({ ...initialState });
+  const [formType, setFormType] = useState("");
   const [deck, setDeck] = useState({});
 
+  // these variables helps to avoid duplicate code
+  const isFormTypeAdd = formType === "add" ? true : false;
+  const isFormTypeEdit = formType === "edit" ? true : false;
+
+  // Determine whether the component call to add or edit card.
+  useEffect(() => {
+    if (path.endsWith("/new")) {
+      setFormType("add");
+    } else {
+      setFormType("edit");
+    }
+  }, [path]);
+
+  // Retrieve existing deck info
   useReadDeckEffect(
     deckId,
     (data) => {
@@ -28,28 +45,31 @@ const EditCard = () => {
     [deckId]
   );
 
+  // Retrieve card info for edit flow,
   useEffect(() => {
-    const abortController = new AbortController();
+    if (isFormTypeEdit) {
+      const abortController = new AbortController();
 
-    async function loadCard() {
-      try {
-        const data = await readCard(cardId, abortController.signal);
-        setFormData(data);
-      } catch (error) {
-        if (error.name === "AbortError") {
-          console.log("readCard error for :", cardId);
-        } else {
-          throw error;
+      async function loadCard() {
+        try {
+          const data = await readCard(cardId, abortController.signal);
+          setFormData(data);
+        } catch (error) {
+          if (error.name === "AbortError") {
+            console.log("readCard error for :", cardId);
+          } else {
+            throw error;
+          }
         }
       }
+
+      loadCard();
+
+      return () => {
+        abortController.abort();
+      };
     }
-
-    loadCard();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [cardId]);
+  }, [cardId, formType, isFormTypeEdit]);
 
   const breadcrumbItems = [
     {
@@ -57,10 +77,14 @@ const EditCard = () => {
       href: `/decks/${deckId}`,
     },
     {
-      name: "Edit Card",
+      name: isFormTypeAdd ? ADD_CARD : EDIT_CARD,
       href: "#",
     },
   ];
+
+  const goGoDeckView = () => {
+    history.push(`/decks/${deckId}`);
+  };
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -71,25 +95,34 @@ const EditCard = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    // create new card
+    if (isFormTypeAdd) {
+      const cardData = {
+        front: formData.front,
+        back: formData.back,
+      };
 
-    const cardData = {
-      ...formData,
-    };
+      createCard(deckId, cardData);
 
-    updateCard(cardData);
+      // display blank inputs to add new card
+      setFormData({ ...initialState });
+    } else {
+      // update existing card
+      const cardData = {
+        ...formData,
+      };
 
-    goGoDeckView();
-  };
+      updateCard(cardData);
 
-  const goGoDeckView = () => {
-    history.push(`/decks/${deckId}`);
+      goGoDeckView();
+    }
   };
 
   return (
     <div className="container-sm">
       <form onSubmit={handleFormSubmit}>
         <Navigation items={breadcrumbItems} />
-        <h2>{`${deck.name}: Add Card`}</h2>
+        <h2>{isFormTypeAdd ? `${deck.name}: ${ADD_CARD}` : EDIT_CARD}</h2>
 
         <div className="mb-3">
           <label htmlFor="front" className="form-label">
@@ -127,10 +160,10 @@ const EditCard = () => {
             onClick={() => goGoDeckView()}
             className="btn btn-secondary mr-2"
           >
-            Cancle
+            Done
           </button>
           <button type="submit" className="btn btn-primary">
-            Submit
+            Save
           </button>
         </div>
       </form>
@@ -138,4 +171,4 @@ const EditCard = () => {
   );
 };
 
-export default EditCard;
+export default AddEditStudyCard;

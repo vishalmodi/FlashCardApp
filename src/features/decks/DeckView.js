@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Navigation from "../../Layout/Navigation";
 import { readDeck } from "../../utils/api";
 import { Route, Switch, useHistory, useParams } from "react-router-dom";
-// import { Route, Switch,useRouteMatch } from "react-router-dom";
 import CardRoutes from "./../StudyCard/CardRoutes";
 
 const DeckView = () => {
@@ -115,7 +114,6 @@ const DeckView = () => {
   };
 
   const RenderCard = ({ card }) => {
-    console.log('RenderCard', card.id)
     return (
       <div id="{deck.id}" className="card mb-1">
         <div className="card-body">
