@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Navigation from "../../Layout/Navigation";
 import { readDeck } from "../../utils/api";
-import { Route, Switch, useHistory, useParams } from "react-router-dom";
-import CardRoutes from "./../StudyCard/CardRoutes";
+import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import AddEditStudyCard from "../StudyCard/AddEditStudyCard";
 
 const DeckView = () => {
   const history = useHistory();
-  const { deckId } = useParams();
+  const {
+    path,
+    url,
+    params: { deckId },
+  } = useRouteMatch();
   const [deck, setDeck] = useState({});
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -30,7 +35,11 @@ const DeckView = () => {
     return () => {
       abortController.abort();
     };
-  }, [deckId]);
+  }, [deckId, refresh]);
+
+  const refreshHandler = () => {
+    setRefresh(!refresh)
+  }
 
   const breadcrumbItems = [
     {
@@ -40,20 +49,20 @@ const DeckView = () => {
   ];
 
   const openStudyCard = (deck) => {
-    history.push(`/decks/${deck.id}/study`);
+    history.push(`${url}/study`);
   };
 
   const openEditDeck = (deck) => {
-    history.push(`/decks/${deck.id}/edit`);
+    history.push(`${url}/edit`);
   };
 
   const openAddCard = () => {
-    history.push(`/decks/${deck.id}/cards/new`);
+    history.push(`${url}/cards/new`);
   };
 
   const openEditCard = (cardId) => {
-    history.push(`/decks/${deck.id}/cards/${cardId}/edit`);
-  }
+    history.push(`${url}/cards/${cardId}/edit`);
+  };
 
   const deleteCard = (cardId) => {
     let canDelete = window.confirm(
@@ -179,11 +188,14 @@ const DeckView = () => {
   return (
     <div className="container-sm">
       <Switch>
-        <Route exact={true} path={`/decks/:deckId`}>
+        <Route exact={true} path={`${path}`}>
           <RenderDeckView />
         </Route>
-        <Route path={`/decks/:deckId/cards`}>
-          <CardRoutes />
+        <Route exact={true} path={`${path}/cards/new`}>
+          <AddEditStudyCard refreshHandler={refreshHandler} />
+        </Route>
+        <Route path={`${path}/cards/:cardId/edit`}>
+          <AddEditStudyCard refreshHandler={refreshHandler} />
         </Route>
       </Switch>
     </div>

@@ -1,9 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-// import Layout from "./Layout";
 import Header from "./Layout/Header";
 import DeckList from "./features/decks/DeckList";
-// import CreateDeck from "./features/decks/CreateDeck";
 import NotFound from "./Layout/NotFound";
 import "./App.css";
 
@@ -20,15 +18,9 @@ function App() {
           <Route exact={true} path="/">
             <DeckList />
           </Route>
-          {/* <Route path="/deck">
-            <DeckList />
-          </Route> */}
           <Route path="/decks">
             <DeckList />
           </Route>
-          {/* <Route exact={true} path={"/deck/new"}>
-            <CreateDeck />
-          </Route> */}
           <Route>
             <NotFound />
           </Route>

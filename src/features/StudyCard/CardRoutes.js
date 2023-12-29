@@ -12,7 +12,7 @@ const CardRoutes = () => {
         </Route>
         <Route path={`${path}/:cardId/edit`}>
           <AddEditStudyCard />
-          </Route>
+        </Route>
       </Switch>
     </div>
   );
