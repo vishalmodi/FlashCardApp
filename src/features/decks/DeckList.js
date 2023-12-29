@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { listDecks } from "../../utils/api";
-import { useHistory } from "react-router-dom";
-import { Switch } from "react-router-dom/cjs/react-router-dom";
-import { Route } from "react-router-dom/cjs/react-router-dom.min";
+import { Route, Switch, useHistory } from "react-router-dom/cjs/react-router-dom";
 import AddEditDeck from "./AddEditDeck";
 import StudyCard from "../StudyCard/StudyCard";
 import DeckView from "./DeckView";
-import CardRoutes from "./../StudyCard/CardRoutes"
 
 const DeckList = () => {
   const [decks, setDecks] = useState([]);
@@ -134,7 +131,7 @@ const DeckList = () => {
           <DeckView />
         </Route>
         <Route path={`/decks/:deckId/cards`}>
-          <CardRoutes />
+          <DeckView />
         </Route>
       </Switch>
     </div>

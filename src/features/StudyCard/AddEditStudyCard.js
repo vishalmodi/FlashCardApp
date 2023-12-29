@@ -4,7 +4,7 @@ import { createCard, readCard, updateCard } from "../../utils/api/index";
 import Navigation from "../../Layout/Navigation";
 import { useReadDeckEffect } from "../../utils/effects";
 
-const AddEditStudyCard = () => {
+const AddEditStudyCard = ({ refreshHandler }) => {
   const ADD_CARD = "Add Card";
   const EDIT_CARD = "Edit Card";
   const initialState = {
@@ -106,6 +106,8 @@ const AddEditStudyCard = () => {
 
       // display blank inputs to add new card
       setFormData({ ...initialState });
+
+      refreshHandler();
     } else {
       // update existing card
       const cardData = {
@@ -113,6 +115,8 @@ const AddEditStudyCard = () => {
       };
 
       updateCard(cardData);
+
+      refreshHandler();
 
       goGoDeckView();
     }
