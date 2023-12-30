@@ -164,10 +164,10 @@ const AddEditStudyCard = ({ refreshHandler }) => {
             onClick={() => goGoDeckView()}
             className="btn btn-secondary mr-2"
           >
-            Done
+            {isFormTypeAdd ? "Done" : "Cancel" }
           </button>
           <button type="submit" className="btn btn-primary">
-            Save
+            {isFormTypeAdd ? "Save" : "Submit" }
           </button>
         </div>
       </form>

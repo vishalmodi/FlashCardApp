@@ -151,10 +151,10 @@ const AddEditDeck = ({ decks }) => {
             onClick={handleCancel}
             className="btn btn-secondary mr-2"
           >
-            Cancle
+            Cancel
           </button>
           <button type="submit" className="btn btn-primary">
-            Save
+            Submit
           </button>
         </div>
       </form>

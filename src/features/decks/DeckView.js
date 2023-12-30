@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Navigation from "../../Layout/Navigation";
-import { readDeck } from "../../utils/api";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { deleteCard, deleteDeck, readDeck } from "../../utils/api";
+import Navigation from "../../Layout/Navigation";
 import AddEditStudyCard from "../StudyCard/AddEditStudyCard";
+import { DELETE_DECK_MSG } from "../Constants";
 
 const DeckView = () => {
   const history = useHistory();
@@ -12,7 +13,7 @@ const DeckView = () => {
     params: { deckId },
   } = useRouteMatch();
   const [deck, setDeck] = useState({});
-  const [refresh, setRefresh] = useState(false)
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -38,8 +39,8 @@ const DeckView = () => {
   }, [deckId, refresh]);
 
   const refreshHandler = () => {
-    setRefresh(!refresh)
-  }
+    setRefresh(!refresh);
+  };
 
   const breadcrumbItems = [
     {
@@ -64,12 +65,23 @@ const DeckView = () => {
     history.push(`${url}/cards/${cardId}/edit`);
   };
 
-  const deleteCard = (cardId) => {
+  const handleDeleteDeck = (deckId) => {
+    let canDelete = window.confirm(DELETE_DECK_MSG);
+
+    if (canDelete) {
+      deleteDeck(deckId);
+      history.push('/')
+    }
+  };
+
+  const handleDeleteStudyCard = (cardId) => {
     let canDelete = window.confirm(
       "Delete this card? \n\nYou will not be able to recover it."
     );
 
     if (canDelete) {
+      deleteCard(cardId)
+      refreshHandler()
     }
   };
 
@@ -112,7 +124,11 @@ const DeckView = () => {
               </button>
             </div>
             <div className="col text-right">
-              <button type="button" className="btn btn-danger">
+              <button
+                type="button"
+                onClick={() => handleDeleteDeck(deck.id)}
+                className="btn btn-danger"
+              >
                 Delete
               </button>
             </div>
@@ -149,7 +165,7 @@ const DeckView = () => {
               </button>
               <button
                 type="button"
-                onClick={() => deleteCard(card.id)}
+                onClick={() => handleDeleteStudyCard(card.id)}
                 className="btn btn-danger"
               >
                 Delete
