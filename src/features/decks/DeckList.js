@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { listDecks } from "../../utils/api";
-import { Route, Switch, useHistory } from "react-router-dom/cjs/react-router-dom";
+import { deleteDeck, listDecks } from "../../utils/api";
+import { Route, Switch, useHistory } from "react-router-dom";
 import AddEditDeck from "./AddEditDeck";
 import StudyCard from "../StudyCard/StudyCard";
 import DeckView from "./DeckView";
+import NotFound from "../../Layout/NotFound";
+import { DELETE_DECK_MSG } from "../Constants";
 
 const DeckList = () => {
   const [decks, setDecks] = useState([]);
+  // page will refresh whenver value change to either true or false
+  const [refreshPage, setRefreshPage] = useState(true);
   const history = useHistory();
-
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -17,7 +20,7 @@ const DeckList = () => {
       setDecks(data);
     }
     loadDecks();
-  }, []);
+  }, [refreshPage]);
 
   const openStudyCard = (deckId) => {
     history.push(`/decks/${deckId}/study`);
@@ -27,16 +30,16 @@ const DeckList = () => {
     history.push(`/decks/${deckId}`);
   };
 
-  const deleteDeck = (deckId) => {
-    let canDelete = window.confirm("Delete this deck? \n\nYou will not be able to recover it.");
-  
-    if (canDelete) {
+  const handleDeleteDeck = (deckId) => {
+    let canDelete = window.confirm(DELETE_DECK_MSG);
 
+    if (canDelete) {
+      deleteDeck(deckId);
+      setRefreshPage(!refreshPage);
     }
-  }
+  };
 
   const RenderCard = ({ deck }) => {
-    // console.log("deck", deck);
     return (
       <div id="{deck.id}" className="card mb-3">
         <div className="card-body">
@@ -77,7 +80,7 @@ const DeckList = () => {
             <div className="col text-right">
               <button
                 type="button"
-                onClick={() => deleteDeck(deck.id)}
+                onClick={() => handleDeleteDeck(deck.id)}
                 className="btn btn-danger"
               >
                 Delete
@@ -119,12 +122,12 @@ const DeckList = () => {
           <RenderDeckList />
         </Route>
         <Route exact={true} path={"/decks/new"}>
-          <AddEditDeck decks={decks}/>
+          <AddEditDeck decks={decks} />
         </Route>
         <Route path={"/decks/:deckId/study"}>
           <StudyCard />
         </Route>
-        <Route path={"/decks/:deckId/edit"} >
+        <Route path={"/decks/:deckId/edit"}>
           <AddEditDeck />
         </Route>
         <Route path={"/decks/:deckId"}>
@@ -132,6 +135,9 @@ const DeckList = () => {
         </Route>
         <Route path={`/decks/:deckId/cards`}>
           <DeckView />
+        </Route>
+        <Route>
+          <NotFound />
         </Route>
       </Switch>
     </div>
